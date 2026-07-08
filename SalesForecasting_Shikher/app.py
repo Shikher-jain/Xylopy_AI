@@ -1,7 +1,8 @@
 import streamlit as st
 import pandas as pd
+import os
 
-# ✅ Import utils
+# Import utils
 from utils.preprocessing import load_data, create_time_series
 from utils.anomaly import detect_anomalies
 from utils.clustering import customer_clustering
@@ -13,7 +14,10 @@ st.title("📊 Demand Intelligence Dashboard")
 # =========================
 # LOAD DATA (clean way)
 # =========================
-df = load_data("data/train.csv")
+BASE_DIR = os.path.dirname(__file__)
+train_csv = os.path.join(BASE_DIR, "data", "train.csv")
+# print(f"Loading data from: {train_csv}")  # Debugging line
+df = load_data(train_csv)
 
 monthly_sales, weekly_sales = create_time_series(df)
 
@@ -46,7 +50,7 @@ elif page == "Forecast":
 
     horizon = st.slider("Months Ahead", 1, 3, 3)
 
-    forecast_df = pd.read_csv("data/forecast.csv")
+    forecast_df = pd.read_csv(f"{BASE_DIR}/data/forecast.csv")
 
     # Ensure date format
     forecast_df['Date'] = pd.to_datetime(forecast_df['Date'])
